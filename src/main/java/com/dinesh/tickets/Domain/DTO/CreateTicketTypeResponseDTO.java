@@ -1,0 +1,21 @@
+package com.dinesh.tickets.Domain.DTO;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class CreateTicketTypeResponseDTO {
+    private UUID id;
+    private String name;
+    private Double price;
+    private Integer totalAvailableTickets;
+    private String Description;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}

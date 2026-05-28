@@ -1,0 +1,67 @@
+package com.dinesh.tickets.Domain.entities;
+
+import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+
+@Entity
+@Table(name = "tickets")
+@Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Ticket {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id",nullable = false,updatable = false)
+    private UUID id;
+
+    @Column(name ="status",nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TicketStatusEnum status;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinTable(name = "ticket_type_id")
+    private TicketType ticketType;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinTable(name = "purchaser_id")
+    private User purchaser;
+
+
+    @OneToMany(mappedBy = "ticket",cascade = CascadeType.ALL)
+    private List<TicketValidations> ticketValidations = new ArrayList<>();
+
+
+    @OneToMany(mappedBy = "tickets",cascade = CascadeType.ALL)
+    private List<QrCode> qrCodes = new ArrayList<>();
+
+
+    @CreatedDate
+    @Column(name = "created_at",updatable = false,nullable = false)
+    private LocalDateTime createdAt;
+
+    @LastModifiedBy
+    @Column(name = "updated_at",updatable = false,nullable = false)
+    private LocalDateTime updatedAt;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Ticket ticket = (Ticket) o;
+        return Objects.equals(id, ticket.id) && status == ticket.status && Objects.equals(createdAt, ticket.createdAt) && Objects.equals(updatedAt, ticket.updatedAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, status, createdAt, updatedAt);
+    }
+}
